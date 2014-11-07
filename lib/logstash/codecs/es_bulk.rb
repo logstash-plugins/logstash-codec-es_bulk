@@ -4,7 +4,7 @@ require "logstash/codecs/line"
 require "logstash/json"
 
 # This codec will decode the Elasticsearch bulk format into
-# individual events, plus metadata into the @metadata field.
+# individual events, plus metadata into the `@metadata` field.
 # 
 # Encoding is not supported at this time as the Elasticsearch
 # output submits Logstash events in bulk format.
