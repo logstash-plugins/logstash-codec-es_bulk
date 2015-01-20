@@ -11,7 +11,6 @@ require "logstash/json"
 class LogStash::Codecs::ESBulk < LogStash::Codecs::Base
   config_name "es_bulk"
 
-  milestone 1
 
   public
   def initialize(params={})
