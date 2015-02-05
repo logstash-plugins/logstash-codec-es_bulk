@@ -3,14 +3,13 @@ require "logstash/codecs/base"
 require "logstash/codecs/line"
 require "logstash/json"
 
-# This codec will decode the Elasticsearch bulk format into
-# individual events, plus metadata into the `@metadata` field.
-# 
+# This codec will decode the http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-bulk.html[Elasticsearch bulk format]
+# into individual events, plus metadata into the `@metadata` field.
+#
 # Encoding is not supported at this time as the Elasticsearch
 # output submits Logstash events in bulk format.
 class LogStash::Codecs::ESBulk < LogStash::Codecs::Base
   config_name "es_bulk"
-
 
   public
   def initialize(params={})
