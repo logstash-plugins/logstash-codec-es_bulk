@@ -28,6 +28,10 @@ class LogStash::Codecs::ESBulk < LogStash::Codecs::Base
         case state
         when :metadata
           event = LogStash::Event.new(line)
+          if metadata["action"] == 'update'
+            event = event["doc"]
+          end
+        
           event["@metadata"] = metadata
           yield event
           state = :initial
@@ -35,6 +39,7 @@ class LogStash::Codecs::ESBulk < LogStash::Codecs::Base
           metadata = line[line.keys[0]]
           metadata["action"] = line.keys[0].to_s
           state = :metadata
+          
           if line.keys[0] == 'delete'
             event = LogStash::Event.new()
             event["@metadata"] = metadata

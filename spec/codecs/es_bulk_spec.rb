@@ -36,7 +36,7 @@ describe LogStash::Codecs::ESBulk do
         when 3
           insist { event['@metadata']['_id'] } == "1"
           insist { event['@metadata']['action'] } == "update"
-          insist { event['doc']['field2'] } == "value2"
+          insist { event['field2'] } == "value2"
         end
         count += 1
       end
