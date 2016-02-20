@@ -27,9 +27,10 @@ class LogStash::Codecs::ESBulk < LogStash::Codecs::Base
         line = LogStash::Json.load(bulk["message"])
         case state
         when :metadata
-          event = LogStash::Event.new(line)
           if metadata["action"] == 'update'
-            event = event["doc"]
+            event = LogStash::Event.new(line["doc"])
+          else
+            event = LogStash::Event.new(line)
           end
         
           event["@metadata"] = metadata
