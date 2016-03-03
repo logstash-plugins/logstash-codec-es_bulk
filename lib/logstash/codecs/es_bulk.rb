@@ -29,6 +29,9 @@ class LogStash::Codecs::ESBulk < LogStash::Codecs::Base
         when :metadata
           if metadata["action"] == 'update'
             event = LogStash::Event.new(line["doc"])
+            if line.has_key?("doc_as_upsert")
+              metadata["doc_as_upsert"] = line["doc_as_upsert"]
+            end
           else
             event = LogStash::Event.new(line)
           end

@@ -17,6 +17,8 @@ describe LogStash::Codecs::ESBulk do
       { "field1" : "value3" }
       { "update" : {"_id" : "1", "_type" : "type1", "_index" : "index1"} }
       { "doc" : {"field2" : "value2"} }
+      { "update" : {"_id" : "1", "_type" : "type1", "_index" : "index1"} }
+      { "doc" : {"field2" : "value2"}, "doc_as_upsert": true }
       HERE
 
       count = 0
@@ -37,10 +39,13 @@ describe LogStash::Codecs::ESBulk do
           insist { event['@metadata']['_id'] } == "1"
           insist { event['@metadata']['action'] } == "update"
           insist { event['field2'] } == "value2"
+        when 4
+          insist { event['@metadata']['doc_as_upsert'] } == true
+          insist { event['field2'] } == "value2"
         end
         count += 1
       end
-      insist { count } == 4
+      insist { count } == 5
     end
   end
 
