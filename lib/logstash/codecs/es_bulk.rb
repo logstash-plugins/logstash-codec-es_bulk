@@ -27,7 +27,15 @@ class LogStash::Codecs::ESBulk < LogStash::Codecs::Base
         line = LogStash::Json.load(bulk["message"])
         case state
         when :metadata
-          event = LogStash::Event.new(line)
+          if metadata["action"] == 'update'
+            event = LogStash::Event.new(line["doc"])
+            if line.has_key?("doc_as_upsert")
+              metadata["doc_as_upsert"] = line["doc_as_upsert"]
+            end
+          else
+            event = LogStash::Event.new(line)
+          end
+        
           event["@metadata"] = metadata
           yield event
           state = :initial
@@ -35,6 +43,7 @@ class LogStash::Codecs::ESBulk < LogStash::Codecs::Base
           metadata = line[line.keys[0]]
           metadata["action"] = line.keys[0].to_s
           state = :metadata
+          
           if line.keys[0] == 'delete'
             event = LogStash::Event.new()
             event["@metadata"] = metadata
