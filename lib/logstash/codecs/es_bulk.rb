@@ -24,11 +24,11 @@ class LogStash::Codecs::ESBulk < LogStash::Codecs::Base
     metadata = Hash.new
     @lines.decode(data) do |bulk|
       begin
-        line = LogStash::Json.load(bulk["message"])
+        line = LogStash::Json.load(bulk.get("message"))
         case state
         when :metadata
           event = LogStash::Event.new(line)
-          event["@metadata"] = metadata
+          event.set("@metadata", metadata)
           yield event
           state = :initial
         when :initial
@@ -37,7 +37,7 @@ class LogStash::Codecs::ESBulk < LogStash::Codecs::Base
           state = :metadata
           if line.keys[0] == 'delete'
             event = LogStash::Event.new()
-            event["@metadata"] = metadata
+            event.set("@metadata", metadata)
             yield event
             state = :initial
           end

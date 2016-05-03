@@ -23,20 +23,20 @@ describe LogStash::Codecs::ESBulk do
       subject.decode(data) do |event|
         case count
         when 0
-          insist { event['@metadata']['_id'] } == "1"
-          insist { event['@metadata']['action'] } == "index"
-          insist { event['field1'] } == "value1"
+          insist { event.get("[@metadata][_id]") } == "1"
+          insist { event.get("[@metadata][action]") } == "index"
+          insist { event.get("field1") } == "value1"
         when 1
-          insist { event['@metadata']['_id'] } == "2"
-          insist { event['@metadata']['action'] } == "delete"
+          insist { event.get("[@metadata][_id]") } == "2"
+          insist { event.get("[@metadata][action]") } == "delete"
         when 2
-          insist { event['@metadata']['_id'] } == "3"
-          insist { event['@metadata']['action'] } == "create"
-          insist { event['field1'] } == "value3"
+          insist { event.get("[@metadata][_id]") } == "3"
+          insist { event.get("[@metadata][action]") } == "create"
+          insist { event.get("field1") } == "value3"
         when 3
-          insist { event['@metadata']['_id'] } == "1"
-          insist { event['@metadata']['action'] } == "update"
-          insist { event['doc']['field2'] } == "value2"
+          insist { event.get("[@metadata][_id]") } == "1"
+          insist { event.get("[@metadata][action]") } == "update"
+          insist { event.get("[doc][field2]") } == "value2"
         end
         count += 1
       end
