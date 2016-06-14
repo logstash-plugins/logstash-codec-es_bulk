@@ -51,6 +51,7 @@ describe LogStash::Codecs::ESBulk do
           insist { event['@metadata']['action'] } == "update"
           insist { event['@metadata']['script'] } == "some script"
           insist { event['@metadata']['script_type'] } == "inline"
+          insist { event['@metadata']['scripted_upsert'] } == true
           insist { event['@metadata']['upsert'] } == "{}"
           insist { event['field1'] } == "value5"
         when 6
@@ -59,6 +60,7 @@ describe LogStash::Codecs::ESBulk do
           insist { event['@metadata']['script'] } == "some_script_id"
           insist { event['@metadata']['script_type'] } == "indexed"
           insist { event['@metadata']['script_lang'] } == "js"
+          insist { event['@metadata']['scripted_upsert'] } == true
           insist { event['@metadata']['upsert'] } == "{\"field2\":\"value7\"}"
           insist { event['field1'] } == "value6"
         end

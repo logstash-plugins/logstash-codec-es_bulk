@@ -35,6 +35,7 @@ class LogStash::Codecs::ESBulk < LogStash::Codecs::Base
               end
             elsif line.has_key?("params")
               event = LogStash::Event.new(line["params"])
+              metadata["scripted_upsert"] = true
               if line.has_key?("script")
                 metadata["script"] = line["script"]
                 metadata["script_type"] = "inline"
