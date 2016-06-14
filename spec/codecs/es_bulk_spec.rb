@@ -8,7 +8,7 @@ describe LogStash::Codecs::ESBulk do
   end
 
   context "#decode" do
-    it "should return 4 events from json data" do
+    it "should return 7 events from json data" do
       data = <<-HERE
       { "index" : { "_index" : "test", "_type" : "type1", "_id" : "1" } }
       { "field1" : "value1" }
@@ -19,6 +19,10 @@ describe LogStash::Codecs::ESBulk do
       { "doc" : {"field2" : "value2"} }
       { "update" : {"_id" : "1", "_type" : "type1", "_index" : "index1"} }
       { "doc" : {"field2" : "value2"}, "doc_as_upsert": true }
+      { "update" : {"_id" : "5", "_type" : "type1", "_index" : "index1"} }
+      { "params" : {"field1" : "value5"}, "script": "some script", "upsert": {} }
+      { "update" : {"_id" : "6", "_type" : "type1", "_index" : "index1"} }
+      { "params" : {"field1" : "value6"}, "script_id": "some_script_id", "lang": "js", "upsert": { "field2": "value7"} }
       HERE
 
       count = 0
@@ -42,10 +46,25 @@ describe LogStash::Codecs::ESBulk do
         when 4
           insist { event['@metadata']['doc_as_upsert'] } == true
           insist { event['field2'] } == "value2"
+        when 5
+          insist { event['@metadata']['_id'] } == "5"
+          insist { event['@metadata']['action'] } == "update"
+          insist { event['@metadata']['script'] } == "some script"
+          insist { event['@metadata']['script_type'] } == "inline"
+          insist { event['@metadata']['upsert'] } == "{}"
+          insist { event['field1'] } == "value5"
+        when 6
+          insist { event['@metadata']['_id'] } == "6"
+          insist { event['@metadata']['action'] } == "update"
+          insist { event['@metadata']['script'] } == "some_script_id"
+          insist { event['@metadata']['script_type'] } == "indexed"
+          insist { event['@metadata']['script_lang'] } == "js"
+          insist { event['@metadata']['upsert'] } == "{\"field2\":\"value7\"}"
+          insist { event['field1'] } == "value6"
         end
         count += 1
       end
-      insist { count } == 5
+      insist { count } == 7
     end
   end
 
