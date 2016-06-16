@@ -1,6 +1,7 @@
 # 2.0.4
   - Depend on logstash-core-plugin-api instead of logstash-core, removing the need to mass update plugins on major releases of logstash
   - Fixed bug with "doc" in update event.
+  - Added support for upsert and scripted update.
 # 2.0.3
   - New dependency requirements for logstash-core for the 5.0 release
 ## 2.0.0
