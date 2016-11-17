@@ -1,3 +1,6 @@
+## 3.0.3
+  - Fixed issue with large bulk requests that were split into multiple chunks, which caused it to lose it's place in the decoding
+  
 ## 3.0.2
   - Relax constraint on logstash-core-plugin-api to >= 1.60 <= 2.99
 

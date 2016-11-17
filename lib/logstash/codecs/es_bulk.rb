@@ -16,30 +16,30 @@ class LogStash::Codecs::ESBulk < LogStash::Codecs::Base
     super(params)
     @lines = LogStash::Codecs::Line.new
     @lines.charset = "UTF-8"
+    @state = :initial
+    @metadata = Hash.new
   end
 
   public
   def decode(data)
-    state = :initial
-    metadata = Hash.new
     @lines.decode(data) do |bulk|
       begin
         line = LogStash::Json.load(bulk.get("message"))
-        case state
+        case @state
         when :metadata
           event = LogStash::Event.new(line)
-          event.set("@metadata", metadata)
+          event.set("@metadata", @metadata)
           yield event
-          state = :initial
+          @state = :initial
         when :initial
-          metadata = line[line.keys[0]]
-          metadata["action"] = line.keys[0].to_s
-          state = :metadata
+          @metadata = line[line.keys[0]]
+          @metadata["action"] = line.keys[0].to_s
+          @state = :metadata
           if line.keys[0] == 'delete'
             event = LogStash::Event.new()
-            event.set("@metadata", metadata)
+            event.set("@metadata", @metadata)
             yield event
-            state = :initial
+            @state = :initial
           end
         end
       rescue LogStash::Json::ParserError => e
