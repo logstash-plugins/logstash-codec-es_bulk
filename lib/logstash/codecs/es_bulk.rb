@@ -22,38 +22,38 @@ class LogStash::Codecs::ESBulk < LogStash::Codecs::Base
     super(params)
     @lines = LogStash::Codecs::Line.new
     @lines.charset = "UTF-8"
+    @state = :initial
+    @metadata = Hash.new
   end
 
   public
   def decode(data)
-    state = :initial
-    metadata = Hash.new
     @lines.decode(data) do |bulk|
       begin
         line = LogStash::Json.load(bulk.get("message"))
-        case state
+        case @state
         when :metadata
-          if metadata["action"] == 'update' and @parse_update
+          if @metadata["action"] == 'update' and @parse_update
             if line.has_key?("doc")
               event = LogStash::Event.new(line["doc"])
               if line.has_key?("doc_as_upsert")
-                metadata["doc_as_upsert"] = line["doc_as_upsert"]
+                @metadata["doc_as_upsert"] = line["doc_as_upsert"]
               end
             elsif line.has_key?("params") and @parse_scripted_upsert
               event = LogStash::Event.new(line["params"])
-              metadata["scripted_upsert"] = true
+              @metadata["scripted_upsert"] = true
               if line.has_key?("script")
-                metadata["script"] = line["script"]
-                metadata["script_type"] = "inline"
+                @metadata["script"] = line["script"]
+                @metadata["script_type"] = "inline"
               elsif line.has_key?("script_id")
-                metadata["script"] = line["script_id"]
-                metadata["script_type"] = "indexed"
+                @metadata["script"] = line["script_id"]
+                @metadata["script_type"] = "indexed"
               end
               if line.has_key?("lang")
-                metadata["script_lang"] = line["lang"]
+                @metadata["script_lang"] = line["lang"]
               end
               if line.has_key?("upsert")
-                metadata["upsert"] = LogStash::Json.dump(line["upsert"])
+                @metadata["upsert"] = LogStash::Json.dump(line["upsert"])
               end
             else
               # fallback to default
@@ -62,18 +62,18 @@ class LogStash::Codecs::ESBulk < LogStash::Codecs::Base
           else
             event = LogStash::Event.new(line)
           end
-          event.set("@metadata", metadata)
+          event.set("@metadata", @metadata)
           yield event
-          state = :initial
+          @state = :initial
         when :initial
-          metadata = line[line.keys[0]]
-          metadata["action"] = line.keys[0].to_s
-          state = :metadata
+          @metadata = line[line.keys[0]]
+          @metadata["action"] = line.keys[0].to_s
+          @state = :metadata
           if line.keys[0] == 'delete'
             event = LogStash::Event.new()
-            event.set("@metadata", metadata)
+            event.set("@metadata", @metadata)
             yield event
-            state = :initial
+            @state = :initial
           end
         end
       rescue LogStash::Json::ParserError => e
