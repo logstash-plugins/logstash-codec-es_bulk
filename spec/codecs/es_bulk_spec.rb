@@ -6,7 +6,6 @@ describe LogStash::Codecs::ESBulk do
   context "#decode" do
     let(:config) { {} }
     let(:subject) { LogStash::Codecs::ESBulk.new(config) }
-
     it "should return 5 events from json data" do
       data = <<-HERE
       { "index" : { "_index" : "test", "_type" : "type1", "_id" : "1" } }
