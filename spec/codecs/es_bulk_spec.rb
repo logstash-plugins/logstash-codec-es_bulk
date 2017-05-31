@@ -1,3 +1,4 @@
+require "logstash/devutils/rspec/spec_helper"
 require "logstash/codecs/es_bulk"
 require "logstash/event"
 require "insist"
