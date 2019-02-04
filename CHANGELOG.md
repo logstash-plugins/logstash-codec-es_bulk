@@ -1,3 +1,6 @@
+## 3.0.7
+  - Add documentation about use with http input
+
 ## 3.0.6
   - Update gemspec summary
 
