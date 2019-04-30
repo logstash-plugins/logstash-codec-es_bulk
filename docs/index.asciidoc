@@ -20,7 +20,7 @@ include::{include_path}/plugin_header.asciidoc[]
 
 ==== Description
 
-This codec will decode the http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-bulk.html[Elasticsearch bulk format]
+This codec will decode the {ref}/docs-bulk.html[Elasticsearch bulk format]
 into individual events, plus metadata into the `@metadata` field.
 
 Encoding is not supported at this time as the Elasticsearch
