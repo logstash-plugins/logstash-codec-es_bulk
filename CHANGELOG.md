@@ -1,3 +1,6 @@
+## 3.0.8
+  - Fixed deeplink to Elasticsearch Reference [#tbd](https://github.com/logstash-plugins/logstash-codec-es_bulk/pull/tbd)
+
 ## 3.0.7
   - Add documentation about use with http input
 
