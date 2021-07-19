@@ -68,7 +68,7 @@ Controls this plugin's compatibility with the {ecs-ref}[Elastic Common Schema (E
 * Value type is <<string,string>>
 * There is no default value for this setting.
 
-Define the target field for placing the row values. If this setting is not
+Define the target field for placing the values. If this setting is not
 set, the data will be stored at the root (top level) of the event.
 
 For example, if you want data to be put under the `document` field:
