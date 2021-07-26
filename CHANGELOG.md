@@ -1,3 +1,6 @@
+## 3.1.0
+  - Add ECS support. Add `target` option [#20](https://github.com/logstash-plugins/logstash-codec-es_bulk/pull/20)
+
 ## 3.0.8
   - Fixed deeplink to Elasticsearch Reference [#18](https://github.com/logstash-plugins/logstash-codec-es_bulk/pull/18)
 
