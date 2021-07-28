@@ -5,7 +5,7 @@ require "insist"
 require 'logstash/plugin_mixins/ecs_compatibility_support/spec_helper'
 
 describe LogStash::Codecs::ESBulk, :ecs_compatibility_support  do
-  ecs_compatibility_matrix(:disabled, :v1, :v8) do |ecs_select|
+  ecs_compatibility_matrix(:disabled, :v1, :v8 => :v1) do |ecs_select|
     before(:each) do
       allow_any_instance_of(described_class).to receive(:ecs_compatibility).and_return(ecs_compatibility)
     end
@@ -26,7 +26,7 @@ describe LogStash::Codecs::ESBulk, :ecs_compatibility_support  do
       { "doc" : {"field2" : "value2"} }
         HERE
 
-        metadata_field = '[@metadata][codec][es_bulk]'
+        metadata_field = ecs_select[disabled: '[@metadata]', v1:'[@metadata][codec][es_bulk]']
 
         count = 0
         subject.decode(data) do |event|
@@ -51,7 +51,7 @@ describe LogStash::Codecs::ESBulk, :ecs_compatibility_support  do
         end
         insist { count } == 4
       end
-    end if ecs_select.active_mode != :disabled
+    end
 
     context "fail to process non-bulk event then continue" do
       it "continues after a fail" do

@@ -1,3 +1,6 @@
+## 3.1.1
+  - Docs: cover existing ECS `v8` alias to `v1` implementation
+
 ## 3.1.0
   - Add ECS support. Add `target` option [#20](https://github.com/logstash-plugins/logstash-codec-es_bulk/pull/20)
 
