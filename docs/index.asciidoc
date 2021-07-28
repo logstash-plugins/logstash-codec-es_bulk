@@ -58,7 +58,7 @@ When ECS is enabled, the metadata is stored in the `[@metadata][codec][es_bulk]`
 * Value type is <<string,string>>
 * Supported values are:
 ** `disabled`: unstructured metadata added at @metadata
-** `v1`: uses `[@metadata][codec][es_bulk]` fields
+** `v1`,`v8`: uses `[@metadata][codec][es_bulk]` fields
 
 Controls this plugin's compatibility with the {ecs-ref}[Elastic Common Schema (ECS)].
 
